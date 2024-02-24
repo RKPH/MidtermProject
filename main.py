@@ -1,4 +1,3 @@
-import argparse
 import pygame
 import sys
 from pygame.locals import QUIT
@@ -17,7 +16,7 @@ def load_map(map_path):
 
 WHITE = (255, 255, 255)
 
-def select_strategy(game_map):
+def select_strategy():
     options = ['bfs', 'dfs', 'astar', 'ucs', 'greedy', 'custom']
     selected_strategy = options[0]  # Default selected strategy
 
@@ -28,7 +27,7 @@ def select_strategy(game_map):
     font = pygame.font.SysFont('Arial', 20)
 
     instructions = [
-        "Click on the dropdown to select a strategy.",
+        "Use arrow left and right to select a map.",
         "Use arrow up and down to choose strategy.",
         "Press Enter to select."
     ]
@@ -42,6 +41,10 @@ def select_strategy(game_map):
     box_on_target_image = pygame.image.load(os.path.join('assets', 'crate_10.png'))
     start_time = None
 
+    map_paths = ["maps/sokoban1.txt", "maps/sokoban2.txt" , "maps/sokoban3.txt", "maps/sokoban4.txt" , "maps/sokoban_extra1.txt" , "maps/sokoban_extra2.txt"]  # List of available map paths
+    map_index = 0  # Index of the currently selected map
+    game_map = load_map(map_paths[map_index])  # Initialize game_map
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -52,9 +55,15 @@ def select_strategy(game_map):
                     selected_strategy = options[(options.index(selected_strategy) - 1) % len(options)]
                 elif event.key == pygame.K_DOWN:
                     selected_strategy = options[(options.index(selected_strategy) + 1) % len(options)]
+                elif event.key == pygame.K_LEFT:
+                    map_index = (map_index - 1) % len(map_paths)
+                    game_map = load_map(map_paths[map_index])
+                elif event.key == pygame.K_RIGHT:
+                    map_index = (map_index + 1) % len(map_paths)
+                    game_map = load_map(map_paths[map_index])
                 elif event.key == pygame.K_RETURN:
                     start_time = time.time()  # Start the timer
-                    return selected_strategy, start_time
+                    return selected_strategy, game_map, start_time
 
         # Clear the screen
         screen.fill((0, 0, 0))
@@ -69,6 +78,8 @@ def select_strategy(game_map):
 
         # Map rendering
         cell_size = 65  # Adjust cell size as needed
+        if map_paths[map_index] == "maps/sokoban_extra1.txt":
+            cell_size = 32  # Reduce cell size for "sokoban_extra1" map
         map_offset_x = 50
         map_offset_y = 50
 
@@ -77,41 +88,62 @@ def select_strategy(game_map):
                 x = map_offset_x + col * cell_size
                 y = map_offset_y + row * cell_size
                 if game_map[row][col] == '#':
-                    screen.blit(wall_image, (x, y))
+                    # Resize wall image to 32x32 if the map is "sokoban_extra1"
+                    if map_paths[map_index] == "maps/sokoban_extra1.txt":
+                        resized_wall_image = pygame.transform.scale(wall_image, (32, 32))
+                        screen.blit(resized_wall_image, (x, y))
+                    else:
+                        screen.blit(wall_image, (x, y))
                 elif game_map[row][col] == '$':
-                    screen.blit(box_image, (x, y))
+                    # Resize box image to 32x32 if the map is "sokoban_extra1"
+                    if map_paths[map_index] == "maps/sokoban_extra1.txt":
+                        resized_box_image = pygame.transform.scale(box_image, (32, 32))
+                        screen.blit(resized_box_image, (x, y))
+                    else:
+                        screen.blit(box_image, (x, y))
                 elif game_map[row][col] == '.':
-                    screen.blit(target_image, (x, y))
+                    # Resize target image to 32x32 if the map is "sokoban_extra1"
+                    if map_paths[map_index] == "maps/sokoban_extra1.txt":
+                        resized_target_image = pygame.transform.scale(target_image, (32, 32))
+                        screen.blit(resized_target_image, (x, y))
+                    else:
+                        screen.blit(target_image, (x, y))
                 elif game_map[row][col] == '*':
-                    screen.blit( box_on_target_image , (x, y))
+                    # Resize box on target image to 32x32 if the map is "sokoban_extra1"
+                    if map_paths[map_index] == "maps/sokoban_extra1.txt":
+                        resized_box_on_target_image = pygame.transform.scale(box_on_target_image, (32, 32))
+                        screen.blit(resized_box_on_target_image , (x, y))
+                    else:
+                        screen.blit(box_on_target_image , (x, y))
                 else:
-                    # Draw floor image first
-                    screen.blit(floor_image, (x, y))
+                    # Resize floor image to 32x32 if the map is "sokoban_extra1"
+                    if map_paths[map_index] == "maps/sokoban_extra1.txt":
+                        resized_floor_image = pygame.transform.scale(floor_image, (32, 32))
+                        screen.blit(resized_floor_image, (x, y))
+                    else:
+                        screen.blit(floor_image, (x, y))
                     # Then draw other elements
                     if game_map[row][col] == '@':
-                        screen.blit(player_image, (x, y))
+                        # Resize player image to 32x32 if the map is "sokoban_extra1"
+                        if map_paths[map_index] == "maps/sokoban_extra1.txt":
+                            resized_player_image = pygame.transform.scale(player_image, (32, 32))
+                            screen.blit(resized_player_image, (x, y))
+                        else:
+                            screen.blit(player_image, (x, y))
 
-        # Display selected strategy at the top left
+        # Display selected strategy and map at the top left
         selected_strategy_text = font.render(f"Selected Strategy: {selected_strategy}", True, (255, 255, 255))
         screen.blit(selected_strategy_text, (instruction_margin, instruction_margin))
+        map_name_text = font.render(f"Selected Map: {os.path.basename(map_paths[map_index])}", True, (255, 255, 255))
+        screen.blit(map_name_text, (instruction_margin, instruction_margin + selected_strategy_text.get_height() + instruction_margin))
 
         pygame.display.flip()  # Update the display after drawing the map and text
 
 if __name__ == '__main__':
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--map', help='The map file', default='maps/sokoban1.txt')
-    args = parser.parse_args()
-
-    game_map = load_map(args.map)
-    game_state = GameState(game_map)
-
-    selected_strategy, start_time = select_strategy(game_map)
+    selected_strategy, game_map, start_time = select_strategy()
     print("Selected strategy:", selected_strategy)
 
-    # Print just the name of the map file
-    print("Map file:", args.map)
+    game_state = GameState(game_map)
 
     solver = Solver(game_state, selected_strategy)
     solver.solve()

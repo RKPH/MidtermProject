@@ -21,11 +21,11 @@ class GameVisualization(object):
         self.clock = None
         self.font = None
         self.block_size = 50
-        self.margin = 5
+        self.margin = 15
         self.width = (self.block_size + self.margin) * \
-            self.game_state.width + self.margin
+            self.game_state.width + self.margin+200
         self.height = (self.block_size + self.margin) * \
-            self.game_state.height + self.margin
+            self.game_state.height + self.margin+200
         self.x_offset = (self.width - self.game_state.width *
                          self.block_size - self.margin) / 2
         self.y_offset = (self.height - self.game_state.height *
@@ -103,7 +103,7 @@ class GameVisualization(object):
         for i in range(len(self.solution)):
             self.game_state = self.game_state.move(self.solution[i])
             self.draw(self.solution[i])
-            time.sleep(0.05)
+            time.sleep(0.5)
     def draw_no_solution_image(self):
         # Load and display a "No Solution" image
         no_solution_image = pygame.image.load(os.path.join('assets', 'no_solution.png'))
