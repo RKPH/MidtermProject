@@ -41,7 +41,7 @@ def select_strategy():
     box_on_target_image = pygame.image.load(os.path.join('assets', 'crate_10.png'))
     start_time = None
 
-    map_paths = ["maps/sokoban1.txt", "maps/sokoban2.txt" , "maps/sokoban3.txt", "maps/sokoban4.txt" , "maps/sokoban_extra3.txt" , "maps/sokoban_extra2.txt"]  # List of available map paths
+    map_paths = ["maps/sokoban1.txt", "maps/sokoban2.txt" , "maps/sokoban3.txt", "maps/sokoban4.txt" , "maps/sokoban_extra1.txt" , "maps/sokoban_extra2.txt"]  # List of available map paths
     map_index = 0  # Index of the currently selected map
     game_map = load_map(map_paths[map_index])  # Initialize game_map
 
@@ -79,7 +79,7 @@ def select_strategy():
 
         # Map rendering
         cell_size = 65  # Adjust cell size as needed
-        if map_paths[map_index] == "maps/sokoban_extra3.txt":
+        if map_paths[map_index] == "maps/sokoban_extra1.txt":
             cell_size = 48  # Reduce cell size for "sokoban_extra1" map
         map_width = len(game_map[0]) * cell_size
         map_height = len(game_map) * cell_size
@@ -92,35 +92,35 @@ def select_strategy():
                 y = map_offset_y + row * cell_size
                 if game_map[row][col] == '#':
                     # Resize wall image to 48x48 if the map is "sokoban_extra1"
-                    if map_paths[map_index] == "maps/sokoban_extra3.txt":
+                    if map_paths[map_index] == "maps/sokoban_extra1.txt":
                         resized_wall_image = pygame.transform.scale(wall_image, (48, 48))
                         screen.blit(resized_wall_image, (x, y))
                     else:
                         screen.blit(wall_image, (x, y))
                 elif game_map[row][col] == '$':
                     # Resize box image to 48x48 if the map is "sokoban_extra1"
-                    if map_paths[map_index] == "maps/sokoban_extra3.txt":
+                    if map_paths[map_index] == "maps/sokoban_extra1.txt":
                         resized_box_image = pygame.transform.scale(box_image, (48, 48))
                         screen.blit(resized_box_image, (x, y))
                     else:
                         screen.blit(box_image, (x, y))
                 elif game_map[row][col] == '.':
                     # Resize target image to 48x48 if the map is "sokoban_extra1"
-                    if map_paths[map_index] == "maps/sokoban_extra3.txt":
+                    if map_paths[map_index] == "maps/sokoban_extra1.txt":
                         resized_target_image = pygame.transform.scale(target_image, (48, 48))
                         screen.blit(resized_target_image, (x, y))
                     else:
                         screen.blit(target_image, (x, y))
                 elif game_map[row][col] == '*':
                     # Resize box on target image to 48x48 if the map is "sokoban_extra1"
-                    if map_paths[map_index] == "maps/sokoban_extra3.txt":
+                    if map_paths[map_index] == "maps/sokoban_extra1.txt":
                         resized_box_on_target_image = pygame.transform.scale(box_on_target_image, (48, 48))
                         screen.blit(resized_box_on_target_image , (x, y))
                     else:
                         screen.blit(box_on_target_image , (x, y))
                 else:
                     # Resize floor image to 48x48 if the map is "sokoban_extra1"
-                    if map_paths[map_index] == "maps/sokoban_extra3.txt":
+                    if map_paths[map_index] == "maps/sokoban_extra1.txt":
                         resized_floor_image = pygame.transform.scale(floor_image, (48, 48))
                         screen.blit(resized_floor_image, (x, y))
                     else:
@@ -128,7 +128,7 @@ def select_strategy():
                     # Then draw other elements
                     if game_map[row][col] == '@':
                         # Resize player image to 48x48 if the map is "sokoban_extra1"
-                        if map_paths[map_index] == "maps/sokoban_extra3.txt":
+                        if map_paths[map_index] == "maps/sokoban_extra1.txt":
                             resized_player_image = pygame.transform.scale(player_image, (48, 48))
                             screen.blit(resized_player_image, (x, y))
                         else:
