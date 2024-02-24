@@ -219,8 +219,9 @@ class Solver(object):
         return None
     @print_stats
     
+    @print_stats
     def custom(self):
-        open_list = [(self.initial_state.get_total_cost(), self.initial_state, [])]
+        open_list = [(self.initial_state.get_heuristic(), self.initial_state, [])]
         closed_set = set()  # Maintain a set of visited states
 
         while open_list:
@@ -240,13 +241,14 @@ class Solver(object):
                 next_state_hash = hash(next_state)
 
                 if next_state_hash not in closed_set:
-                    new_cost = len(path) + 1  # Update the cost with the length of the path
-                    heapq.heappush(open_list, (new_cost + next_state.get_heuristic(), next_state, path + [direction]))
-                    self.generated_states += 1
+                    heuristic_value = next_state.get_heuristic()
+                    heapq.heappush(open_list, (heuristic_value, next_state, path + [direction]))
 
             self.expanded_states += 1
+            self.generated_states += 1
 
         return None
+
 
         
 
